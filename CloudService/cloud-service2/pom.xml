@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-parent</artifactId>
+    <version>2.0.8.RELEASE</version>
+    <relativePath/> <!-- lookup parent from repository -->
+  </parent>
+  <groupId>org.cloud.service</groupId>
+  <artifactId>cloud-service2</artifactId>
+  <version>0.0.6</version>
+  <name>cloud-service2</name>
+  <description>Demo project for Spring Boot</description>
+
+  <properties>
+    <java.version>1.8</java.version>
+    <spring-cloud.version>Finchley.SR2</spring-cloud.version>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.cloud</groupId>
+      <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.cloud</groupId>
+      <artifactId>spring-cloud-starter-config</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.cloud</groupId>
+      <artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.cloud</groupId>
+      <artifactId>spring-cloud-starter-openfeign</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.cloud</groupId>
+      <artifactId>spring-cloud-starter-sleuth</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.cloud</groupId>
+      <artifactId>spring-cloud-starter-zipkin</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.cloud</groupId>
+      <artifactId>spring-cloud-starter-bus-amqp</artifactId>
+    </dependency>
+
+    <!--<dependency>-->
+      <!--<groupId>org.springframework.cloud</groupId>-->
+      <!--<artifactId>spring-cloud-config-monitor</artifactId>-->
+    <!--</dependency>-->
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-dependencies</artifactId>
+        <version>${spring-cloud.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>com.spotify</groupId>
+        <artifactId>docker-maven-plugin</artifactId>
+        <executions>
+          <!--<execution>-->
+          <!--<id>build-image</id>-->
+          <!--<phase>package</phase>-->
+          <!--<goals>-->
+          <!--<goal>build</goal>-->
+          <!--</goals>-->
+          <!--</execution>-->
+          <execution>
+            <id>tag-image</id>
+            <phase>package</phase>
+            <goals>
+              <goal>build</goal>
+              <!--<goal>tag</goal>-->
+            </goals>
+            <!--<configuration>-->
+            <!--<image>172.16.66.37:8082/cloud-base/${project.name}</image>-->
+            <!--<newName>172.16.66.37:8082/cloud-base/${project.name}:dev</newName>-->
+            <!--</configuration>-->
+          </execution>
+          <!--<execution>-->
+          <!--<id>push-image</id>-->
+          <!--<phase>deploy</phase>-->
+          <!--<goals>-->
+          <!--<goal>push</goal>-->
+          <!--</goals>-->
+          <!--<configuration>-->
+          <!--<imageName>172.16.66.37:8082/cloud-base/${project.name}:dev</imageName>-->
+          <!--</configuration>-->
+          <!--</execution>-->
+        </executions>
+        <configuration>
+          <imageName>172.16.66.37:8082/cloud-service/${project.name}</imageName>
+          <imageTags>
+            <imageTag>${project.version}</imageTag>
+            <imageTag>latest</imageTag>
+          </imageTags>
+          <!--<pushImage>true</pushImage>-->
+          <dockerDirectory>./</dockerDirectory>
+          <buildArgs>
+            <JAR_FILE>${project.name}-${project.version}.jar</JAR_FILE>
+          </buildArgs>
+          <!-- 如果你想强制docker在每次新的构建上覆盖镜像tags，可配置forceTags -->
+          <forceTags>true</forceTags>
+          <serverId>docker-central</serverId>
+        </configuration>
+      </plugin>
+      <!--<plugin>-->
+      <!--<groupId>org.springframework.boot</groupId>-->
+      <!--<artifactId>spring-boot-maven-plugin</artifactId>-->
+      <!--<configuration>-->
+      <!--<mainClass>org.cloud.base.cloudeureka.CloudEurekaApplication</mainClass>-->
+      <!--</configuration>-->
+      <!--</plugin>-->
+    </plugins>
+  </build>
+
+  <repositories>
+    <repository>
+      <id>spring-milestones</id>
+      <name>Spring Milestones</name>
+      <url>https://repo.spring.io/milestone</url>
+    </repository>
+  </repositories>
+
+</project>
